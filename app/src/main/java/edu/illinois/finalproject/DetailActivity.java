@@ -38,9 +38,12 @@ public class DetailActivity extends AppCompatActivity {
         final Button commentButton = (Button) findViewById(R.id.commentButton);
         final Button reminderButton = (Button) findViewById(R.id.reminderButton);
 
+        //https://stackoverflow.com/questions/19109960/how-to-check-if-a-date-is-greater-than-
+        // another-in-java
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date1 = sdf.parse(movie.getReleaseDate());
+            //https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java
             Date date2 = new Date(System.currentTimeMillis());
             if (date1.after(date2)) {
                 reminderButton.setVisibility(View.VISIBLE);
