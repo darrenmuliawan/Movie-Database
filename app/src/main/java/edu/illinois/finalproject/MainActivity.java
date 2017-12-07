@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         final Button nowPlaying = (Button) findViewById(R.id.nowPlayingButton);
         final Button upcoming = (Button) findViewById(R.id.upcomingButton);
         final Button popular = (Button) findViewById(R.id.popularButton);
         final Button topRated = (Button) findViewById(R.id.topRatedButton);
+        final Button reminderButton = (Button) findViewById(R.id.reminderButton);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
 
         populateRecyclerView(recyclerView, DEFAULT_URL);
