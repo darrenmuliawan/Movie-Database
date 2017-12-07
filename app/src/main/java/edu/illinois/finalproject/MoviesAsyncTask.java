@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,8 +46,6 @@ public class MoviesAsyncTask extends AsyncTask<String, Integer, MoviesCollection
             URL url = new URL(params[0]);
 
             URLConnection connection = url.openConnection();
-            connection.setRequestProperty("user-key", ApiKey.API_KEY);
-            connection.setRequestProperty("accept", "application/json");
             connection.connect();
 
             InputStream inStream = connection.getInputStream();
@@ -60,19 +60,20 @@ public class MoviesAsyncTask extends AsyncTask<String, Integer, MoviesCollection
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
+            e.printStackTrace();}
+
         return null;
     }
 
     @Override
     protected void onPostExecute(MoviesCollection moviesCollection) {
         if (moviesCollection == null) {
-            return;
+            Log.d(TAG, "NULL MOVIE");
         }
-        for (Movies movies: moviesCollection.getMovies()) {
-            Log.d(TAG, "Movie: " + movies.getMovie().getTitle());
-            moviesAdapter.addMovies(movies.getMovie());
+
+        for (Movie movie: moviesCollection.getMovies()) {
+            Log.d(TAG, "Movie: " + movie.getTitle());
+            moviesAdapter.addMovies(movie);
         }
         moviesAdapter.notifyDataSetChanged();
     }

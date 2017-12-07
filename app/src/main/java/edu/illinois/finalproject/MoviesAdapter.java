@@ -19,11 +19,10 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     public static final String MOVIE = "Movie";
-    public static final String EMPTY_STRING = "";
     private List<Movie> listOfMovies;
 
     /**
-     * Constructor for RestaurantAdapter
+     * Constructor for MovieAdapter
      * @param movies
      */
     public MoviesAdapter(List<Movie> movies) {
@@ -31,7 +30,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     /**
-     * Add restaurants to the restaurant list
+     * Add movies to the movie list
      * @param movie
      */
     public void addMovies(Movie movie) {
@@ -40,10 +39,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        Movie movie = listOfMovies.get(position);
-        return R.layout.;
-        //return (!restaurant.getImageUrl().equals(EMPTY_STRING)) ?
-        //        R.layout.restaurant_list_with_images : R.layout.restaurant_list;
+        return R.layout.movies_list;
     }
 
     @Override
@@ -56,12 +52,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(MoviesAdapter.ViewHolder holder, int position) {
         final Movie movie = listOfMovies.get(position);
-
-
         holder.movieName.setText(movie.getTitle());
-        holder.movieRating.setText(movie.getRating());
         final Context context = holder.itemView.getContext();
-        Picasso.with(context).load(movie.getImageUrl()).into(holder.movieImage);
+
+        String imageUrl = "https://image.tmdb.org/t/p/w500/" + movie.getImageUrl();
+        Picasso.with(context).load(imageUrl).into(holder.movieImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,15 +77,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View itemView;
         public TextView movieName;
-        public TextView movieRating;
         public ImageView movieImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            this.movieName = (TextView) itemView.findViewById(R.id.);
-            this.movieRating = (TextView) itemView.findViewById(R.id.);
-            this.movieImage = (ImageView) itemView.findViewById(R.id.);
+            this.movieName = (TextView) itemView.findViewById(R.id.listTitle);
+            this.movieImage = (ImageView) itemView.findViewById(R.id.listImage);
         }
     }
 }

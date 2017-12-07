@@ -15,7 +15,7 @@ public class Movie implements Parcelable {
     private int voteCount;
 
     @SerializedName("vote_average")
-    private int rating;
+    private double rating;
     private String title;
 
     @SerializedName("poster_path")
@@ -47,7 +47,7 @@ public class Movie implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(voteCount);
-        dest.writeInt(rating);
+        dest.writeInt((int) rating);
         dest.writeString(title);
         dest.writeString(imageUrl);
         dest.writeString(language);
@@ -78,7 +78,7 @@ public class Movie implements Parcelable {
         return voteCount;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 

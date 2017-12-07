@@ -5,9 +5,9 @@ package edu.illinois.finalproject;
  */
 
 public class MoviesCollection {
-    private Movies[] results;
+    private Movie[] results;
 
-    public Movies[] getMovies() {
+    public Movie[] getMovies() {
         return results;
     }
 }
