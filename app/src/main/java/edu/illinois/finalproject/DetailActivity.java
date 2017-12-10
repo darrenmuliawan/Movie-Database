@@ -58,12 +58,18 @@ public class DetailActivity extends AppCompatActivity {
         movieOverview.setText(movie.getOverview());
         //http://www.viralandroid.com/2015/10/how-to-make-scrollable-textview-in-android.html
         movieOverview.setMovementMethod(new ScrollingMovementMethod());
-        movieReleaseDate.setText(movie.getReleaseDate());
+
+        String releaseDate = "Release date: " + movie.getReleaseDate();
+        movieReleaseDate.setText(releaseDate);
+
+        StringBuilder reminderButtonText = new StringBuilder();
+        reminderButtonText.append("Remind me when " + movie.getTitle() + " is released!");
+        reminderButton.setText(reminderButtonText.toString());
 
         String rating = "Rating: " + Double.toString(movie.getRating());
         movieRating.setText(rating);
 
-        String genre = "";
+        String genre = "Genre: ";
         for(int i = 0; i < movie.getGenre().length; i++) {
             if (i == movie.getGenre().length - 1) {
                 genre = genre + movie.getGenre()[i];
