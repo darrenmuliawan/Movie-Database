@@ -16,15 +16,24 @@ public class MainActivity extends AppCompatActivity {
 
     String DEFAULT_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
-            "language=en-US&api_key=71f617f7828962b265163541921f2037";
     String NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
+    String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
+            "language=en-US&api_key=71f617f7828962b265163541921f2037";
+
     String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
     String TOPRATED_URL = "https://api.themoviedb.org/3/movie/top_rated?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
     String PAGE_FINDER_STRING = "?page=";
+    int nowPlayingCtr = 1;
+    int upcomingCtr = 1;
+    int popularCtr = 1;
+    int topRatedCtr = 1;
+    List<Movie> nowPlayingMovieList = new ArrayList<>();
+    List<Movie> upcomingMovieList = new ArrayList<>();
+    List<Movie> popularMovieList = new ArrayList<>();
+    List<Movie> topRatedMovieList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         final Button loadMoreButton = (Button) findViewById(R.id.loadMoreButton);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
 
-        final List<Movie> nowPlayingMovieList = new ArrayList<>();
         // Default main page
         List<Movie> movieList = new ArrayList<>();
         populateRecyclerView(recyclerView, DEFAULT_URL, movieList);
@@ -64,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         upcoming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Movie> upcomingMovieList = new ArrayList<>();
                 populateRecyclerView(recyclerView, UPCOMING_URL, upcomingMovieList);
 
                 // Change colors of buttons
@@ -82,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         popular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Movie> popularMovieList = new ArrayList<>();
                 populateRecyclerView(recyclerView, POPULAR_URL, popularMovieList);
 
                 // Change colors of buttons
@@ -100,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         topRated.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Movie> topRatedMovieList = new ArrayList<>();
                 populateRecyclerView(recyclerView, TOPRATED_URL, topRatedMovieList);
 
                 // Change colors of buttons
@@ -115,41 +120,43 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         loadMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int nowPlayingCtr = 1;
-                int upcomingCtr = 1;
-                int popularCtr = 1;
-                int topRatedCtr = 1;
-                String newNowPlayingUrl = NOWPLAYING_URL;
                 if (nowPlaying.getCurrentTextColor() == Color.WHITE) {
+                    NOWPLAYING_URL = nextPageUrl(NOWPLAYING_URL, nowPlayingCtr);
+                    populateRecyclerView(recyclerView, NOWPLAYING_URL, nowPlayingMovieList);
                     nowPlayingCtr++;
-                    newNowPlayingUrl = nextPageUrl(newNowPlayingUrl, nowPlayingCtr);
-                    NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
-                            "page=2&language=en-US&api_key=71f617f7828962b265163541921f2037";
-                    populateRecyclerView(recyclerView, UPCOMING_URL, nowPlayingMovieList);
                 } else if (upcoming.getCurrentTextColor() == Color.WHITE) {
-
+                    UPCOMING_URL = nextPageUrl(UPCOMING_URL, upcomingCtr);
+                    populateRecyclerView(recyclerView, UPCOMING_URL, upcomingMovieList);
+                    upcomingCtr++;
                 } else if (popular.getCurrentTextColor() == Color.WHITE) {
-
+                    POPULAR_URL = nextPageUrl(POPULAR_URL, popularCtr);
+                    populateRecyclerView(recyclerView, POPULAR_URL, popularMovieList);
+                    popularCtr++;
                 } else if (topRated.getCurrentTextColor() == Color.WHITE) {
-
+                    TOPRATED_URL = nextPageUrl(TOPRATED_URL, topRatedCtr);
+                    populateRecyclerView(recyclerView, TOPRATED_URL, topRatedMovieList);
+                    topRatedCtr++;
                 }
-           }
+            }
         });
     }
 
+    /**
+     * Edit the current page URL to become the next page URL.
+     * @param url URL of current page.
+     * @param currentPage current page.
+     * @return URL of next page.
+     */
     public String nextPageUrl(String url, int currentPage) {
-        String pageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage);
-        //int indexOfPageNumber = url.lastIndexOf(PAGE_FINDER_STRING) + 1;
-        url.replace()
-        if (currentPage < 10) {
-
-        } else {
-
-        }
-        return url;
+        String nextPageUrl;
+        String oldPageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage);
+        String newPageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage + 1);
+        nextPageUrl = url.replace(oldPageNumber, newPageNumber);
+        return nextPageUrl;
     }
 
     /**
