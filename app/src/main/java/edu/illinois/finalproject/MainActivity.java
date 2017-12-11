@@ -14,15 +14,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    final String DEFAULT_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
+    String DEFAULT_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    final String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
+    String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
             "language=en-US&api_key=71f617f7828962b265163541921f2037";
-    final String NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
+    String NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    final String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?" +
+    String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    final String TOPRATED_URL = "https://api.themoviedb.org/3/movie/top_rated?" +
+    String TOPRATED_URL = "https://api.themoviedb.org/3/movie/top_rated?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
 
     @Override
@@ -33,17 +33,22 @@ public class MainActivity extends AppCompatActivity {
         final Button upcoming = (Button) findViewById(R.id.upcomingButton);
         final Button popular = (Button) findViewById(R.id.popularButton);
         final Button topRated = (Button) findViewById(R.id.topRatedButton);
-        final Button reminderButton = (Button) findViewById(R.id.reminderButton);
+        final Button loadMoreButton = (Button) findViewById(R.id.loadMoreButton);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
 
-        populateRecyclerView(recyclerView, DEFAULT_URL);
+        final List<Movie> nowPlayingMovieList = new ArrayList<>();
+        // Default main page
+        List<Movie> movieList = new ArrayList<>();
+        populateRecyclerView(recyclerView, DEFAULT_URL, movieList);
         nowPlaying.setBackgroundColor(Color.DKGRAY);
         nowPlaying.setTextColor(Color.WHITE);
 
         nowPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, NOWPLAYING_URL);
+                populateRecyclerView(recyclerView, NOWPLAYING_URL, nowPlayingMovieList);
+
+                // Change colors of buttons
                 nowPlaying.setBackgroundColor(Color.DKGRAY);
                 nowPlaying.setTextColor(Color.WHITE);
                 upcoming.setBackgroundColor(Color.GRAY);
@@ -58,7 +63,10 @@ public class MainActivity extends AppCompatActivity {
         upcoming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, UPCOMING_URL);
+                List<Movie> upcomingMovieList = new ArrayList<>();
+                populateRecyclerView(recyclerView, UPCOMING_URL, upcomingMovieList);
+
+                // Change colors of buttons
                 upcoming.setBackgroundColor(Color.DKGRAY);
                 upcoming.setTextColor(Color.WHITE);
                 nowPlaying.setBackgroundColor(Color.GRAY);
@@ -73,7 +81,10 @@ public class MainActivity extends AppCompatActivity {
         popular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, POPULAR_URL);
+                List<Movie> popularMovieList = new ArrayList<>();
+                populateRecyclerView(recyclerView, POPULAR_URL, popularMovieList);
+
+                // Change colors of buttons
                 popular.setBackgroundColor(Color.DKGRAY);
                 popular.setTextColor(Color.WHITE);
                 upcoming.setBackgroundColor(Color.GRAY);
@@ -88,7 +99,10 @@ public class MainActivity extends AppCompatActivity {
         topRated.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, TOPRATED_URL);
+                List<Movie> topRatedMovieList = new ArrayList<>();
+                populateRecyclerView(recyclerView, TOPRATED_URL, topRatedMovieList);
+
+                // Change colors of buttons
                 topRated.setBackgroundColor(Color.DKGRAY);
                 topRated.setTextColor(Color.WHITE);
                 upcoming.setBackgroundColor(Color.GRAY);
@@ -99,10 +113,33 @@ public class MainActivity extends AppCompatActivity {
                 nowPlaying.setTextColor(Color.BLACK);
             }
         });
+
+//        loadMoreButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (nowPlaying.getCurrentTextColor() == Color.WHITE) {
+//                    NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
+//                            "page=2&language=en-US&api_key=71f617f7828962b265163541921f2037";
+//                    populateRecyclerView(recyclerView, UPCOMING_URL, nowPlayingMovieList);
+//                } else if (upcoming.getCurrentTextColor() == Color.WHITE) {
+//
+//                } else if (popular.getCurrentTextColor() == Color.WHITE) {
+//
+//                } else if (topRated.getCurrentTextColor() == Color.WHITE) {
+//
+//                }
+//           }
+//        });
     }
 
-    public void populateRecyclerView(RecyclerView recyclerView, String url) {
-        List<Movie> movieList = new ArrayList<>();
+    /**
+     * Add the list of movies to the RecyclerView.
+     * @param recyclerView Recycler View.
+     * @param url The URL where the JSON is parsed from.
+     * @param movieList List of movies.
+     * @return movieList
+     */
+    public List<Movie> populateRecyclerView(RecyclerView recyclerView, String url, List<Movie> movieList) {
         MoviesAdapter moviesAdapter = new MoviesAdapter(movieList);
         recyclerView.setAdapter(moviesAdapter);
 
@@ -111,5 +148,18 @@ public class MainActivity extends AppCompatActivity {
         moviesAsyncTask.execute(url);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
+        return movieList;
+    }
+
+    /**
+     *
+     * @param recyclerView
+     * @param url
+     * @param movieList
+     * @param activeButton
+     */
+    public void addMoreMovies(RecyclerView recyclerView, String url, List<Movie> movieList,
+                              Button activeButton) {
+
     }
 }

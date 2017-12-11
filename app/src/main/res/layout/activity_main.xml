@@ -10,37 +10,37 @@
         android:id="@+id/nowPlayingButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="Now playing"
         android:textSize="12dp"
         app:layout_constraintEnd_toStartOf="@+id/upcomingButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="@+id/upcomingButton" />
 
     <Button
         android:id="@+id/upcomingButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="Upcoming"
         android:textSize="12dp"
         app:layout_constraintEnd_toStartOf="@+id/popularButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/nowPlayingButton"
-        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="@+id/popularButton" />
 
     <Button
         android:id="@+id/popularButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
         android:text="popular"
         android:textSize="12dp"
         app:layout_constraintEnd_toStartOf="@+id/topRatedButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/upcomingButton"
-        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="@+id/topRatedButton" />
 
     <Button
@@ -48,26 +48,38 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
+        android:background="@android:color/darker_gray"
         android:text="top rated"
         android:textSize="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/popularButton"
-        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movie_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/loadMoreButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nowPlayingButton"
+        app:layout_constraintVertical_weight="0.93" />
+
+    <Button
+        android:id="@+id/loadMoreButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/darker_gray"
+        android:text="Load more movies"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upcomingButton" />
+        app:layout_constraintTop_toBottomOf="@+id/movie_list"
+        app:layout_constraintVertical_weight="0.07" />
 
 </android.support.constraint.ConstraintLayout>
 

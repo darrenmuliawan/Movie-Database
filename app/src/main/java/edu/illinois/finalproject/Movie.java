@@ -21,6 +21,9 @@ public class Movie implements Parcelable {
     @SerializedName("poster_path")
     private String imageUrl;
 
+    @SerializedName("backdrop_path")
+    private String detailImageUrl;
+
     @SerializedName("original_language")
     private String language;
 
@@ -32,47 +35,7 @@ public class Movie implements Parcelable {
     @SerializedName("release_date")
     private String releaseDate;
 
-    protected Movie(Parcel in) {
-        voteCount = in.readInt();
-        rating = in.readInt();
-        title = in.readString();
-        imageUrl = in.readString();
-        language = in.readString();
-        genre = in.createIntArray();
-        adult = in.readByte() != 0;
-        overview = in.readString();
-        releaseDate = in.readString();
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(voteCount);
-        dest.writeInt((int) rating);
-        dest.writeString(title);
-        dest.writeString(imageUrl);
-        dest.writeString(language);
-        dest.writeIntArray(genre);
-        dest.writeByte((byte) (adult ? 1 : 0));
-        dest.writeString(overview);
-        dest.writeString(releaseDate);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
 
     public int getVoteCount() {
         return voteCount;
@@ -88,6 +51,10 @@ public class Movie implements Parcelable {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getDetailImageUrl() {
+        return detailImageUrl;
     }
 
     public String getLanguage() {
@@ -109,4 +76,51 @@ public class Movie implements Parcelable {
     public String getReleaseDate() {
         return releaseDate;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.voteCount);
+        dest.writeDouble(this.rating);
+        dest.writeString(this.title);
+        dest.writeString(this.imageUrl);
+        dest.writeString(this.detailImageUrl);
+        dest.writeString(this.language);
+        dest.writeIntArray(this.genre);
+        dest.writeByte(this.adult ? (byte) 1 : (byte) 0);
+        dest.writeString(this.overview);
+        dest.writeString(this.releaseDate);
+    }
+
+    public Movie() {
+    }
+
+    protected Movie(Parcel in) {
+        this.voteCount = in.readInt();
+        this.rating = in.readDouble();
+        this.title = in.readString();
+        this.imageUrl = in.readString();
+        this.detailImageUrl = in.readString();
+        this.language = in.readString();
+        this.genre = in.createIntArray();
+        this.adult = in.readByte() != 0;
+        this.overview = in.readString();
+        this.releaseDate = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel source) {
+            return new Movie(source);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }
