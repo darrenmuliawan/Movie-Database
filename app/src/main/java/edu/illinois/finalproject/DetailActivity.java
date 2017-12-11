@@ -7,6 +7,7 @@ import android.provider.CalendarContract;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
@@ -155,31 +156,28 @@ public class DetailActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-
-                ArrayList<String> commentArray = new ArrayList<>();
+                String comment = null;
+                String name = null;
+                String time = null;
+                Comment commentObj = new Comment(null, null, null);
+                commentAdapter.deleteAllComment();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
-                        String comment = dataSnapshot2.getValue().toString();
-                        //Comment comment = dataSnapshot2.getValue(Comment.class);
-                        //commentAdapter.addComment(comment);
-                        commentArray.add(comment);
-//                        if (dataSnapshot2.getKey().equals("comment")) {
-//                            commentArray.add(String.valueOf(dataSnapshot2.getValue()));
-//                        }
-//                        if (dataSnapshot2.getKey().equals("name")) {
-//                            nameArray.add(String.valueOf(dataSnapshot2.getValue()));
-//                        }
-//                        if (dataSnapshot2.getKey().equals("time")) {
-//                            timeArray.add(String.valueOf(dataSnapshot2.getValue()));
-//                        }
+                        if (dataSnapshot2.getKey().equals("comment")) {
+                            comment = String.valueOf(dataSnapshot2.getValue());
+                        }
+                        if (dataSnapshot2.getKey().equals("name")) {
+                            name = String.valueOf(dataSnapshot2.getValue());
+                        }
+                        if (dataSnapshot2.getKey().equals("time")) {
+                            time = String.valueOf(dataSnapshot2.getValue());
+                        }
+                        commentObj = new Comment(name, comment, time);
                     }
+                    commentAdapter.addComment(commentObj);
+                    commentAdapter.notifyDataSetChanged();
                 }
-                for (String value : commentArray) {
-                    Log.d(TAG, "Value is: " + value);
-                }
-                //commentAdapter.notifyDataSetChanged();
             }
-
 
             @Override
             public void onCancelled(DatabaseError error) {
@@ -187,11 +185,8 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d(TAG, "ASDF");
             }
         });
-        //commentAdapter.notifyDataSetChanged();
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
-
-
     }
 
     /**

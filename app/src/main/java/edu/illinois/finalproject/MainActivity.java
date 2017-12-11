@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
     String TOPRATED_URL = "https://api.themoviedb.org/3/movie/top_rated?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
+    String PAGE_FINDER_STRING = "?page=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,22 +115,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        loadMoreButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (nowPlaying.getCurrentTextColor() == Color.WHITE) {
-//                    NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
-//                            "page=2&language=en-US&api_key=71f617f7828962b265163541921f2037";
-//                    populateRecyclerView(recyclerView, UPCOMING_URL, nowPlayingMovieList);
-//                } else if (upcoming.getCurrentTextColor() == Color.WHITE) {
-//
-//                } else if (popular.getCurrentTextColor() == Color.WHITE) {
-//
-//                } else if (topRated.getCurrentTextColor() == Color.WHITE) {
-//
-//                }
-//           }
-//        });
+        loadMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int nowPlayingCtr = 1;
+                int upcomingCtr = 1;
+                int popularCtr = 1;
+                int topRatedCtr = 1;
+                String newNowPlayingUrl = NOWPLAYING_URL;
+                if (nowPlaying.getCurrentTextColor() == Color.WHITE) {
+                    nowPlayingCtr++;
+                    newNowPlayingUrl = nextPageUrl(newNowPlayingUrl, nowPlayingCtr);
+                    NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
+                            "page=2&language=en-US&api_key=71f617f7828962b265163541921f2037";
+                    populateRecyclerView(recyclerView, UPCOMING_URL, nowPlayingMovieList);
+                } else if (upcoming.getCurrentTextColor() == Color.WHITE) {
+
+                } else if (popular.getCurrentTextColor() == Color.WHITE) {
+
+                } else if (topRated.getCurrentTextColor() == Color.WHITE) {
+
+                }
+           }
+        });
+    }
+
+    public String nextPageUrl(String url, int currentPage) {
+        String pageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage);
+        //int indexOfPageNumber = url.lastIndexOf(PAGE_FINDER_STRING) + 1;
+        url.replace()
+        if (currentPage < 10) {
+
+        } else {
+
+        }
+        return url;
     }
 
     /**
@@ -139,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
      * @param movieList List of movies.
      * @return movieList
      */
-    public List<Movie> populateRecyclerView(RecyclerView recyclerView, String url, List<Movie> movieList) {
+    public void populateRecyclerView(RecyclerView recyclerView, String url, List<Movie> movieList) {
         MoviesAdapter moviesAdapter = new MoviesAdapter(movieList);
         recyclerView.setAdapter(moviesAdapter);
 
@@ -148,18 +168,5 @@ public class MainActivity extends AppCompatActivity {
         moviesAsyncTask.execute(url);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
-        return movieList;
-    }
-
-    /**
-     *
-     * @param recyclerView
-     * @param url
-     * @param movieList
-     * @param activeButton
-     */
-    public void addMoreMovies(RecyclerView recyclerView, String url, List<Movie> movieList,
-                              Button activeButton) {
-
     }
 }

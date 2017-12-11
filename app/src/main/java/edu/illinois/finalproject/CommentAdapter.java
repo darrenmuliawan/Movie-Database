@@ -23,12 +23,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private List<Comment> listOfComments;
     final String COMMENT = "comment";
 
-    public CommentAdapter(List<Comment> movies) {
-        listOfComments = movies;
+    public CommentAdapter(List<Comment> comments) {
+        listOfComments = comments;
     }
 
     public void addComment(Comment comment) {
         listOfComments.add(comment);
+    }
+
+    public void deleteAllComment() {
+        listOfComments.clear();
     }
 
     @Override
