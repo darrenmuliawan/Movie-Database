@@ -14,24 +14,24 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    String DEFAULT_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
+    private String DEFAULT_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    String NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
+    private String NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
+    private String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
             "language=en-US&api_key=71f617f7828962b265163541921f2037";
-    String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?" +
+    private String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    String TOPRATED_URL = "https://api.themoviedb.org/3/movie/top_rated?" +
+    private String TOPRATED_URL = "https://api.themoviedb.org/3/movie/top_rated?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    int nowPlayingCtr = 1;
-    int upcomingCtr = 1;
-    int popularCtr = 1;
-    int topRatedCtr = 1;
-    List<Movie> nowPlayingMovieList = new ArrayList<>();
-    List<Movie> upcomingMovieList = new ArrayList<>();
-    List<Movie> popularMovieList = new ArrayList<>();
-    List<Movie> topRatedMovieList = new ArrayList<>();
+    private int nowPlayingCtr = 1;
+    private int upcomingCtr = 1;
+    private int popularCtr = 1;
+    private int topRatedCtr = 1;
+    private List<Movie> nowPlayingMovieList = new ArrayList<>();
+    private List<Movie> upcomingMovieList = new ArrayList<>();
+    private List<Movie> popularMovieList = new ArrayList<>();
+    private List<Movie> topRatedMovieList = new ArrayList<>();
     static MainActivity mainActivity;
 
     @Override

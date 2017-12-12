@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -39,9 +40,11 @@ import java.util.concurrent.TimeUnit;
 import static android.content.ContentValues.TAG;
 
 public class DetailActivity extends AppCompatActivity {
+    public static final String GENRE_URL = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=71f617f7828962b265163541921f2037";
     private FirebaseDatabase database;
     Calendar calendar = Calendar.getInstance();
     List<Comment> commentList = new ArrayList<>();
+    static TextView movieGenre;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -53,7 +56,7 @@ public class DetailActivity extends AppCompatActivity {
         final Movie movie = intent.getParcelableExtra(MoviesAdapter.MOVIE);
         final ImageView movieImage = (ImageView) findViewById(R.id.imageView);
         final TextView movieName = (TextView) findViewById(R.id.title);
-        final TextView movieGenre = (TextView) findViewById(R.id.genre);
+        movieGenre = (TextView) findViewById(R.id.genre);
         final TextView movieOverview = (TextView) findViewById(R.id.overview);
         final TextView movieReleaseDate = (TextView) findViewById(R.id.releaseDate);
         final TextView movieRating = (TextView) findViewById(R.id.rating);
@@ -94,8 +97,10 @@ public class DetailActivity extends AppCompatActivity {
         String rating = "Rating: " + Double.toString(movie.getRating());
         movieRating.setText(rating);
 
-        String genre = Helper.buildGenreString(movie);
-        movieGenre.setText(genre);
+        // Set the text for movieGenre
+        HashMap<Integer, String> genreMap = new HashMap<>();
+        GenreAsyncTask genreAsyncTask = new GenreAsyncTask(movie, genreMap);
+        genreAsyncTask.execute(GENRE_URL);
 
         // Writing to Firebase
         database = FirebaseDatabase.getInstance();
@@ -116,8 +121,8 @@ public class DetailActivity extends AppCompatActivity {
 
         // Read from the database to populate the commentRecyclerView
         DatabaseReference titleRef = database.getReference(movie.getTitle());
-        DatabaseReference myRef = titleRef.child(Helper.COMMENT_REF);
-        Helper.readFromTheDatabase(commentAdapter, myRef);
+        DatabaseReference commentRef = titleRef.child(Helper.COMMENT_REF);
+        Helper.readFromTheDatabase(commentAdapter, commentRef);
     }
 
     /**

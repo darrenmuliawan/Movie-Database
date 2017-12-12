@@ -2,14 +2,12 @@ package edu.illinois.finalproject;
 
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -70,9 +68,9 @@ public class Helper {
      * @param recyclerView Recycler View.
      * @param url The URL where the JSON is parsed from.
      * @param movieList List of movies.
-     * @return movieList
      */
-    public static void populateRecyclerView(RecyclerView recyclerView, String url, List<Movie> movieList) {
+    public static void populateRecyclerView(RecyclerView recyclerView, String url,
+                                            List<Movie> movieList) {
         MoviesAdapter moviesAdapter = new MoviesAdapter(movieList);
         recyclerView.setAdapter(moviesAdapter);
 
@@ -81,24 +79,6 @@ public class Helper {
         moviesAsyncTask.execute(url);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.mainActivity,
                 LinearLayoutManager.VERTICAL, false));
-    }
-
-    /**
-     *
-     * @param movie
-     * @return
-     */
-    @NonNull
-    public static String buildGenreString(Movie movie) {
-        StringBuilder genre = new StringBuilder("Genre: ");
-        for(int i = 0; i < movie.getGenre().length; i++) {
-            if (i == movie.getGenre().length - 1) {
-                genre.append(movie.getGenre()[i]);
-            } else {
-                genre.append(movie.getGenre()[i]).append(", ");
-            }
-        }
-        return genre.toString();
     }
 
     /**
@@ -124,13 +104,14 @@ public class Helper {
     }
 
     /**
-     *
-     * @param database
-     * @param movie
-     * @param commentBox
+     * Write comments to the Firebase.
+     * @param database Firebase database
+     * @param movie Movie object
+     * @param commentBox EditText where the comment is taken from
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void writeToDatabase(FirebaseDatabase database, Movie movie, EditText commentBox) {
+    public static void writeToDatabase(FirebaseDatabase database, Movie movie,
+                                       EditText commentBox) {
         DatabaseReference titleRef = database.getReference(movie.getTitle());
         DatabaseReference commentsRef = titleRef.child(COMMENT_REF);
         String comment = commentBox.getText().toString();
@@ -151,12 +132,13 @@ public class Helper {
     }
 
     /**
-     *
-     * @param commentAdapter
-     * @param myRef
+     * Read the comments from the Firebase
+     * @param commentAdapter Adapter for comments
+     * @param commentRef Reference to comments
      */
-    public static void readFromTheDatabase(final CommentAdapter commentAdapter, DatabaseReference myRef) {
-        myRef.addValueEventListener(new ValueEventListener() {
+    public static void readFromTheDatabase(final CommentAdapter commentAdapter,
+                                           DatabaseReference commentRef) {
+        commentRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
