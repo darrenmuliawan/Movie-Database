@@ -28,11 +28,18 @@ import java.util.concurrent.TimeUnit;
 
 public class Helper {
     private final static String PAGE_FINDER_STRING = "?page=";
-    public final static String COMMENT_REF = "comments";
-    static String comment = null;
-    static String name = null;
-    static String time = null;
-    static Comment commentObj = new Comment(null, null, null);
+    final static String COMMENT_REF = "comments";
+    private static final String EMPTY_STRING = "";
+    private static final String ANONYMOUS = "Anonymous";
+    private static final String YYYY_MM_DD_HH_MM_SS = "yyyy/MM/dd HH:mm:ss";
+    private static final String YYYY_MM_DD = "yyyy-MM-dd";
+    public static final String COMMENT = "comment";
+    public static final String NAME = "name";
+    public static final String TIME = "time";
+    private static String comment = null;
+    private static String name = null;
+    private static String time = null;
+    private static Comment commentObj = new Comment(null, null, null);
 
     /**
      * This function is to load more movies to the list and show it on the RecyclerView.
@@ -42,8 +49,8 @@ public class Helper {
      * @param movieList List of movies
      * @return edited URL
      */
-    public static String loadMoreMovies(String url, int counter, RecyclerView recyclerView,
-                                        List<Movie> movieList) {
+    static String loadMoreMovies(String url, int counter, RecyclerView recyclerView,
+                                 List<Movie> movieList) {
         url = nextPageUrl(url, counter);
         populateRecyclerView(recyclerView, url, movieList);
         return url;
@@ -55,7 +62,7 @@ public class Helper {
      * @param currentPage current page.
      * @return URL of next page.
      */
-    public static String nextPageUrl(String url, int currentPage) {
+    private static String nextPageUrl(String url, int currentPage) {
         String nextPageUrl;
         String oldPageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage);
         String newPageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage + 1);
@@ -69,8 +76,8 @@ public class Helper {
      * @param url The URL where the JSON is parsed from.
      * @param movieList List of movies.
      */
-    public static void populateRecyclerView(RecyclerView recyclerView, String url,
-                                            List<Movie> movieList) {
+    static void populateRecyclerView(RecyclerView recyclerView, String url,
+                                     List<Movie> movieList) {
         MoviesAdapter moviesAdapter = new MoviesAdapter(movieList);
         recyclerView.setAdapter(moviesAdapter);
 
@@ -87,10 +94,10 @@ public class Helper {
      * @param reminderButton button to remind the user when movie is released.
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void compareDates(Movie movie, Button reminderButton) {
+    static void compareDates(Movie movie, Button reminderButton) {
         //https://stackoverflow.com/questions/19109960/how-to-check-if-a-date-is-greater-than-
         // another-in-java
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat(YYYY_MM_DD);
         try {
             Date date1 = sdf.parse(movie.getReleaseDate());
             //https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java
@@ -110,15 +117,20 @@ public class Helper {
      * @param commentBox EditText where the comment is taken from
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static void writeToDatabase(FirebaseDatabase database, Movie movie,
-                                       EditText commentBox) {
+    static void writeToDatabase(FirebaseDatabase database, Movie movie,
+                                EditText commentBox, EditText nameCommentBox) {
         DatabaseReference titleRef = database.getReference(movie.getTitle());
         DatabaseReference commentsRef = titleRef.child(COMMENT_REF);
         String comment = commentBox.getText().toString();
-        String time = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").
+        String name = nameCommentBox.getText().toString();
+        if (name.equals(EMPTY_STRING)) {
+            name = ANONYMOUS;
+        }
+        //https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java
+        String time = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS).
                 format(Calendar.getInstance().getTime());
 
-        Comment newComment = new Comment("alexander", comment, time);
+        Comment newComment = new Comment(name, comment, time);
         commentsRef.push().setValue(newComment);
 
         // set up a counter that is expecting 1 down count
@@ -136,8 +148,8 @@ public class Helper {
      * @param commentAdapter Adapter for comments
      * @param commentRef Reference to comments
      */
-    public static void readFromTheDatabase(final CommentAdapter commentAdapter,
-                                           DatabaseReference commentRef) {
+    static void readFromTheDatabase(final CommentAdapter commentAdapter,
+                                    DatabaseReference commentRef) {
         commentRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -146,13 +158,13 @@ public class Helper {
                 commentAdapter.deleteAllComment();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
-                        if (dataSnapshot2.getKey().equals("comment")) {
+                        if (dataSnapshot2.getKey().equals(COMMENT)) {
                             comment = String.valueOf(dataSnapshot2.getValue());
                         }
-                        if (dataSnapshot2.getKey().equals("name")) {
+                        if (dataSnapshot2.getKey().equals(NAME)) {
                             name = String.valueOf(dataSnapshot2.getValue());
                         }
-                        if (dataSnapshot2.getKey().equals("time")) {
+                        if (dataSnapshot2.getKey().equals(TIME)) {
                             time = String.valueOf(dataSnapshot2.getValue());
                         }
                         commentObj = new Comment(name, comment, time);

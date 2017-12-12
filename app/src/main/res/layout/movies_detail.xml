@@ -80,14 +80,14 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:hint="Enter your comment"
+        android:hint="Enter your comment about this movie!"
         android:inputType="textLongMessage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/commentButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="0.8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/nameCommentBox" />
 
     <Button
         android:id="@+id/commentButton"
@@ -136,25 +136,25 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/commentList"
         android:layout_width="403dp"
-        android:layout_height="125dp"
+        android:layout_height="100dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/overview" />
+        app:layout_constraintTop_toBottomOf="@+id/reminderButton" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/nameCommentBox"
         android:layout_width="226dp"
         android:layout_height="44dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:ems="10"
+        android:hint="Enter your name"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.047"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentList" />
 </android.support.constraint.ConstraintLayout>

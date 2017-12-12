@@ -40,11 +40,13 @@ import java.util.concurrent.TimeUnit;
 import static android.content.ContentValues.TAG;
 
 public class DetailActivity extends AppCompatActivity {
-    public static final String GENRE_URL = "https://api.themoviedb.org/3/genre/movie/list?language=en-US&api_key=71f617f7828962b265163541921f2037";
+    public static final String GENRE_URL = "https://api.themoviedb.org/3/genre/movie/list?" +
+            "language=en-US&api_key=71f617f7828962b265163541921f2037";
+    public static final String IMAGE_URL = "https://image.tmdb.org/t/p/w500/";
     private FirebaseDatabase database;
     Calendar calendar = Calendar.getInstance();
     List<Comment> commentList = new ArrayList<>();
-    static TextView movieGenre;
+    public static TextView movieGenre;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -60,13 +62,14 @@ public class DetailActivity extends AppCompatActivity {
         final TextView movieOverview = (TextView) findViewById(R.id.overview);
         final TextView movieReleaseDate = (TextView) findViewById(R.id.releaseDate);
         final TextView movieRating = (TextView) findViewById(R.id.rating);
+        final EditText nameCommentBox = (EditText) findViewById(R.id.nameCommentBox);
         final EditText commentBox = (EditText) findViewById(R.id.commentBox);
         final Button commentButton = (Button) findViewById(R.id.commentButton);
         final Button reminderButton = (Button) findViewById(R.id.reminderButton);
         final RecyclerView commentRecyclerView = (RecyclerView) findViewById(R.id.commentList);
 
         // Set the User Interface
-        String imageUrl = "https://image.tmdb.org/t/p/w500/" + movie.getDetailImageUrl();
+        String imageUrl = IMAGE_URL + movie.getDetailImageUrl();
         Picasso.with(this).load(imageUrl).into(movieImage);
 
         movieName.setText(movie.getTitle());
@@ -107,7 +110,7 @@ public class DetailActivity extends AppCompatActivity {
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Helper.writeToDatabase(database, movie, commentBox);
+                Helper.writeToDatabase(database, movie, commentBox, nameCommentBox);
                 Toast.makeText(DetailActivity.this, "Comments added!",
                         Toast.LENGTH_SHORT).show();
             }

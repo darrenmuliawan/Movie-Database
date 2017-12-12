@@ -1,18 +1,13 @@
 package edu.illinois.finalproject;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-import static edu.illinois.finalproject.MoviesAdapter.MOVIE;
 
 /**
  * Created by darrenalexander on 12/10/17.
@@ -21,7 +16,6 @@ import static edu.illinois.finalproject.MoviesAdapter.MOVIE;
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
     private List<Comment> listOfComments;
-    final String COMMENT = "comment";
 
     public CommentAdapter(List<Comment> comments) {
         listOfComments = comments;
