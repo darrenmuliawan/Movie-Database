@@ -111,6 +111,23 @@ public class Helper {
     }
 
     /**
+     * Set the date to Calendar object.
+     * https://stackoverflow.com/questions/11791513/converting-string-to-calendar-
+     * what-is-the-easiest-way
+     * @param date formatted date (yyyy-mm-dd)
+     * @return calendar
+     * @throws ParseException
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static Calendar insertDateToCalendar(String date) throws ParseException {
+        SimpleDateFormat curFormater = new SimpleDateFormat(YYYY_MM_DD);
+        Date dateObj = curFormater.parse(date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateObj);
+        return calendar;
+    }
+
+    /**
      * Write comments to the Firebase.
      * @param database Firebase database
      * @param movie Movie object

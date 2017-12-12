@@ -89,7 +89,7 @@ public class DetailActivity extends AppCompatActivity {
                 String date = movie.getReleaseDate();
                 String title = movie.getTitle() + " is released today!";
                 try {
-                    calendar = CalendarHelper.insertDateToCalendar(date);
+                    calendar = Helper.insertDateToCalendar(date);
                     addEvent(title, calendar);
                 } catch (ParseException e) {
                     e.printStackTrace();
