@@ -14,8 +14,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String DEFAULT_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
-            "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
     private String NOWPLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
     private String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
@@ -46,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
 
         // Default main page
-        List<Movie> movieList = new ArrayList<>();
-        Helper.populateRecyclerView(recyclerView, DEFAULT_URL, movieList);
+        Helper.populateRecyclerView(recyclerView, NOWPLAYING_URL, nowPlayingMovieList);
         nowPlaying.setBackgroundColor(Color.DKGRAY);
         nowPlaying.setTextColor(Color.WHITE);
 
