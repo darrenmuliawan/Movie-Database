@@ -16,6 +16,7 @@
         app:layout_constraintEnd_toStartOf="@+id/commentTime"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_weight="0.6"
         app:layout_constraintTop_toTopOf="@+id/commentTime" />
 
     <TextView
@@ -43,6 +44,7 @@
         android:text="Time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="0.4"
         app:layout_constraintStart_toEndOf="@+id/commentName"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="0.3" />

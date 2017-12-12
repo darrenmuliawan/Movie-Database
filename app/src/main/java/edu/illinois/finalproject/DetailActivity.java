@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ import static android.content.ContentValues.TAG;
 public class DetailActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     Calendar calendar = Calendar.getInstance();
-    final String COMMENT_REF = "comments";
+    List<Comment> commentList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -61,23 +62,12 @@ public class DetailActivity extends AppCompatActivity {
         final Button reminderButton = (Button) findViewById(R.id.reminderButton);
         final RecyclerView commentRecyclerView = (RecyclerView) findViewById(R.id.commentList);
 
-        //https://stackoverflow.com/questions/19109960/how-to-check-if-a-date-is-greater-than-
-        // another-in-java
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date date1 = sdf.parse(movie.getReleaseDate());
-            //https://stackoverflow.com/questions/5175728/how-to-get-the-current-date-time-in-java
-            Date date2 = new Date(System.currentTimeMillis());
-            if (date1.after(date2)) {
-                reminderButton.setVisibility(View.VISIBLE);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        // Set the User Interface
         String imageUrl = "https://image.tmdb.org/t/p/w500/" + movie.getDetailImageUrl();
         Picasso.with(this).load(imageUrl).into(movieImage);
+
         movieName.setText(movie.getTitle());
+
         movieOverview.setText(movie.getOverview());
         //http://www.viralandroid.com/2015/10/how-to-make-scrollable-textview-in-android.html
         movieOverview.setMovementMethod(new ScrollingMovementMethod());
@@ -85,9 +75,8 @@ public class DetailActivity extends AppCompatActivity {
         String releaseDate = "Release date: " + movie.getReleaseDate();
         movieReleaseDate.setText(releaseDate);
 
-        StringBuilder reminderButtonText = new StringBuilder();
-        reminderButtonText.append("Remind me when " + movie.getTitle() + " is released!");
-        reminderButton.setText(reminderButtonText.toString());
+        Helper.compareDates(movie, reminderButton);
+        reminderButton.setText(("Remind me when " + movie.getTitle() + " is released!"));
         reminderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,88 +94,30 @@ public class DetailActivity extends AppCompatActivity {
         String rating = "Rating: " + Double.toString(movie.getRating());
         movieRating.setText(rating);
 
-        String genre = "Genre: ";
-        for(int i = 0; i < movie.getGenre().length; i++) {
-            if (i == movie.getGenre().length - 1) {
-                genre = genre + movie.getGenre()[i];
-            } else {
-                genre = genre + movie.getGenre()[i] + ", ";
-            }
-        }
+        String genre = Helper.buildGenreString(movie);
         movieGenre.setText(genre);
 
-        // DATABASE
+        // Writing to Firebase
         database = FirebaseDatabase.getInstance();
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference titleRef = database.getReference(movie.getTitle());
-                DatabaseReference commentsRef = titleRef.child(COMMENT_REF);
-                String comment = commentBox.getText().toString();
-                String time = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").
-                        format(Calendar.getInstance().getTime());
-
-                Comment newComment = new Comment("alexander", comment, time);
-                commentsRef.push().setValue(newComment);
-
-                // set up a counter that is expecting 1 down count
-                final CountDownLatch writeSignal = new CountDownLatch(1);
-                // prevent forward progress until count is zero or 2 seconds pass
-                try {
-                    writeSignal.await(2, TimeUnit.SECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Helper.writeToDatabase(database, movie, commentBox);
                 Toast.makeText(DetailActivity.this, "Comments added!",
                         Toast.LENGTH_SHORT).show();
             }
         });
 
-        List<Comment> commentList = new ArrayList<>();
+        // Setting up the RecyclerView
         final CommentAdapter commentAdapter = new CommentAdapter(commentList);
         commentRecyclerView.setAdapter(commentAdapter);
-
-        // populating the commentRecyclerView
-        DatabaseReference titleRef = database.getReference(movie.getTitle());
-        DatabaseReference myRef = titleRef.child(COMMENT_REF);
-
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String comment = null;
-                String name = null;
-                String time = null;
-                Comment commentObj = new Comment(null, null, null);
-                commentAdapter.deleteAllComment();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    for (DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()) {
-                        if (dataSnapshot2.getKey().equals("comment")) {
-                            comment = String.valueOf(dataSnapshot2.getValue());
-                        }
-                        if (dataSnapshot2.getKey().equals("name")) {
-                            name = String.valueOf(dataSnapshot2.getValue());
-                        }
-                        if (dataSnapshot2.getKey().equals("time")) {
-                            time = String.valueOf(dataSnapshot2.getValue());
-                        }
-                        commentObj = new Comment(name, comment, time);
-                    }
-                    commentAdapter.addComment(commentObj);
-                    commentAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.d(TAG, "ASDF");
-            }
-        });
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
+
+        // Read from the database to populate the commentRecyclerView
+        DatabaseReference titleRef = database.getReference(movie.getTitle());
+        DatabaseReference myRef = titleRef.child(Helper.COMMENT_REF);
+        Helper.readFromTheDatabase(commentAdapter, myRef);
     }
 
     /**

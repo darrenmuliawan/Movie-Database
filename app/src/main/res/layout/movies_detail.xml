@@ -35,8 +35,8 @@
 
     <TextView
         android:id="@+id/overview"
-        android:layout_width="0dp"
-        android:layout_height="88dp"
+        android:layout_width="405dp"
+        android:layout_height="81dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -80,12 +80,12 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:inputType="textLongMessage"
-        app:layout_constraintHorizontal_weight="0.8"
         android:hint="Enter your comment"
+        android:inputType="textLongMessage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/commentButton"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
 
@@ -99,10 +99,10 @@
         android:layout_marginTop="8dp"
         android:text="SEND"
         android:textSize="10sp"
-        app:layout_constraintHorizontal_weight="0.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="0.2"
         app:layout_constraintStart_toEndOf="@+id/commentBox"
         app:layout_constraintTop_toBottomOf="@+id/reminderButton"
         app:layout_constraintVertical_bias="1.0" />

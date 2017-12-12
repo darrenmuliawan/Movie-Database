@@ -20,12 +20,10 @@ public class MainActivity extends AppCompatActivity {
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
     String UPCOMING_URL = "https://api.themoviedb.org/3/movie/upcoming?page=1&" +
             "language=en-US&api_key=71f617f7828962b265163541921f2037";
-
     String POPULAR_URL = "https://api.themoviedb.org/3/movie/popular?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
     String TOPRATED_URL = "https://api.themoviedb.org/3/movie/top_rated?" +
             "page=1&language=en-US&api_key=71f617f7828962b265163541921f2037";
-    String PAGE_FINDER_STRING = "?page=";
     int nowPlayingCtr = 1;
     int upcomingCtr = 1;
     int popularCtr = 1;
@@ -34,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     List<Movie> upcomingMovieList = new ArrayList<>();
     List<Movie> popularMovieList = new ArrayList<>();
     List<Movie> topRatedMovieList = new ArrayList<>();
+    static MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Default main page
         List<Movie> movieList = new ArrayList<>();
-        populateRecyclerView(recyclerView, DEFAULT_URL, movieList);
+        Helper.populateRecyclerView(recyclerView, DEFAULT_URL, movieList);
         nowPlaying.setBackgroundColor(Color.DKGRAY);
         nowPlaying.setTextColor(Color.WHITE);
 
+        // click "Now Playing" button
         nowPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, NOWPLAYING_URL, nowPlayingMovieList);
-
+                Helper.populateRecyclerView(recyclerView, NOWPLAYING_URL, nowPlayingMovieList);
                 // Change colors of buttons
                 nowPlaying.setBackgroundColor(Color.DKGRAY);
                 nowPlaying.setTextColor(Color.WHITE);
@@ -69,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // click "Upcoming" button
         upcoming.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, UPCOMING_URL, upcomingMovieList);
-
+                Helper.populateRecyclerView(recyclerView, UPCOMING_URL, upcomingMovieList);
                 // Change colors of buttons
                 upcoming.setBackgroundColor(Color.DKGRAY);
                 upcoming.setTextColor(Color.WHITE);
@@ -86,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // click "Popular" button
         popular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, POPULAR_URL, popularMovieList);
-
+                Helper.populateRecyclerView(recyclerView, POPULAR_URL, popularMovieList);
                 // Change colors of buttons
                 popular.setBackgroundColor(Color.DKGRAY);
                 popular.setTextColor(Color.WHITE);
@@ -103,11 +102,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // click "Top Rated" button
         topRated.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                populateRecyclerView(recyclerView, TOPRATED_URL, topRatedMovieList);
-
+                Helper.populateRecyclerView(recyclerView, TOPRATED_URL, topRatedMovieList);
                 // Change colors of buttons
                 topRated.setBackgroundColor(Color.DKGRAY);
                 topRated.setTextColor(Color.WHITE);
@@ -120,60 +119,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        // click "Load More Movies" button
         loadMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (nowPlaying.getCurrentTextColor() == Color.WHITE) {
-                    NOWPLAYING_URL = nextPageUrl(NOWPLAYING_URL, nowPlayingCtr);
-                    populateRecyclerView(recyclerView, NOWPLAYING_URL, nowPlayingMovieList);
+                    NOWPLAYING_URL = Helper.loadMoreMovies(NOWPLAYING_URL, nowPlayingCtr,
+                            recyclerView, nowPlayingMovieList);
                     nowPlayingCtr++;
                 } else if (upcoming.getCurrentTextColor() == Color.WHITE) {
-                    UPCOMING_URL = nextPageUrl(UPCOMING_URL, upcomingCtr);
-                    populateRecyclerView(recyclerView, UPCOMING_URL, upcomingMovieList);
+                    UPCOMING_URL = Helper.loadMoreMovies(UPCOMING_URL, upcomingCtr, recyclerView,
+                            upcomingMovieList);
                     upcomingCtr++;
                 } else if (popular.getCurrentTextColor() == Color.WHITE) {
-                    POPULAR_URL = nextPageUrl(POPULAR_URL, popularCtr);
-                    populateRecyclerView(recyclerView, POPULAR_URL, popularMovieList);
+                    POPULAR_URL = Helper.loadMoreMovies(POPULAR_URL, popularCtr, recyclerView,
+                            popularMovieList);
                     popularCtr++;
                 } else if (topRated.getCurrentTextColor() == Color.WHITE) {
-                    TOPRATED_URL = nextPageUrl(TOPRATED_URL, topRatedCtr);
-                    populateRecyclerView(recyclerView, TOPRATED_URL, topRatedMovieList);
+                    TOPRATED_URL = Helper.loadMoreMovies(TOPRATED_URL, topRatedCtr, recyclerView,
+                            topRatedMovieList);
                     topRatedCtr++;
                 }
             }
         });
-    }
-
-    /**
-     * Edit the current page URL to become the next page URL.
-     * @param url URL of current page.
-     * @param currentPage current page.
-     * @return URL of next page.
-     */
-    public String nextPageUrl(String url, int currentPage) {
-        String nextPageUrl;
-        String oldPageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage);
-        String newPageNumber = PAGE_FINDER_STRING + String.valueOf(currentPage + 1);
-        nextPageUrl = url.replace(oldPageNumber, newPageNumber);
-        return nextPageUrl;
-    }
-
-    /**
-     * Add the list of movies to the RecyclerView.
-     * @param recyclerView Recycler View.
-     * @param url The URL where the JSON is parsed from.
-     * @param movieList List of movies.
-     * @return movieList
-     */
-    public void populateRecyclerView(RecyclerView recyclerView, String url, List<Movie> movieList) {
-        MoviesAdapter moviesAdapter = new MoviesAdapter(movieList);
-        recyclerView.setAdapter(moviesAdapter);
-
-        MoviesAsyncTask moviesAsyncTask = new MoviesAsyncTask(this,
-                moviesAdapter, movieList);
-        moviesAsyncTask.execute(url);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL, false));
     }
 }
