@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,9 +25,10 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 //https://firebase.google.com/docs/auth/android/password-auth
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String SIGN_UP = "Sign Up!";
-    public static final String SIGN_IN = "Sign in!";
-    public static final String LOADING = "Loading...";
+    public static final String SIGN_UP = "Sign Up";
+    public static final String SIGN_IN = "Sign in";
+    public static final String LOADING = "Please wait...";
+    public static final String EMPTY_STRING = "";
     Button emailButton;
     Button signInButton;
     Button signUpButton;
@@ -34,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     Button backButton;
     EditText emailEditText;
     EditText passwordEditText;
-    EditText userDisplayName;
+    TextView title;
     private ProgressDialog progressDialog;
     FirebaseAuth firebaseAuth;
 
@@ -43,18 +45,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        title = (TextView) findViewById(R.id.title);
         emailEditText = (EditText) findViewById(R.id.email);
         passwordEditText = (EditText) findViewById(R.id.password);
-        userDisplayName = (EditText) findViewById(R.id.displayName);
         emailButton = (Button) findViewById(R.id.emailButton);
         signInButton = (Button) findViewById(R.id.signInButton);
         signUpButton = (Button) findViewById(R.id.signUpButton);
         anonymousButton = (Button) findViewById(R.id.anonymousButton);
         backButton = (Button) findViewById(R.id.backButton);
         progressDialog = new ProgressDialog(this);
-
         firebaseAuth = FirebaseAuth.getInstance();
 
+        // set the default user interface
         defaultUI();
 
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 emailButton.setText(SIGN_IN);
                 updateUI();
-                userDisplayName.setVisibility(View.GONE);
                 emailButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -111,9 +112,9 @@ public class LoginActivity extends AppCompatActivity {
     private void defaultUI() {
         emailEditText.setVisibility(View.GONE);
         passwordEditText.setVisibility(View.GONE);
-        userDisplayName.setVisibility(View.GONE);
         emailButton.setVisibility(View.GONE);
         backButton.setVisibility(View.GONE);
+        title.setVisibility(View.VISIBLE);
         signInButton.setVisibility(View.VISIBLE);
         signUpButton.setVisibility(View.VISIBLE);
         anonymousButton.setVisibility(View.VISIBLE);
@@ -125,7 +126,6 @@ public class LoginActivity extends AppCompatActivity {
     private void registerUser() {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        final String name = userDisplayName.getText().toString();
 
         if (!validateForm()) {
             return;
@@ -139,15 +139,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.
-                            Builder().setDisplayName(name).build();
-                    if (user != null) {
-                        user.updateProfile(profileChangeRequest);
-                    }
-                    Toast.makeText(LoginActivity.this, "Welcome " +
-                            user.getDisplayName(), Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(LoginActivity.this, "Registration success!",
+                            Toast.LENGTH_SHORT).show();
+                    defaultUI();
                 } else {
                     Toast.makeText(LoginActivity.this, "Registration failed.",
                             Toast.LENGTH_SHORT).show();
@@ -162,7 +156,6 @@ public class LoginActivity extends AppCompatActivity {
      * @param password user password
      */
     private void signIn(String email, String password) {
-        //Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
         }
@@ -180,16 +173,12 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(mainActivity);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Authentication" +
+                                    " failed.", Toast.LENGTH_SHORT).show();
                         }
                         hideProgressDialog();
                     }
                 });
-    }
-
-    private void signOut() {
-        firebaseAuth.signOut();
     }
 
     /**
@@ -215,14 +204,6 @@ public class LoginActivity extends AppCompatActivity {
             passwordEditText.setError(null);
         }
 
-        String name = userDisplayName.getText().toString();
-        if (TextUtils.isEmpty(name)) {
-            passwordEditText.setError("Required.");
-            valid = false;
-        } else {
-            passwordEditText.setError(null);
-        }
-
         return valid;
     }
 
@@ -232,9 +213,9 @@ public class LoginActivity extends AppCompatActivity {
     public void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(LOADING);
             progressDialog.setIndeterminate(true);
         }
+        progressDialog.setMessage(LOADING);
         progressDialog.show();
     }
 
@@ -254,10 +235,12 @@ public class LoginActivity extends AppCompatActivity {
         emailEditText.setVisibility(View.VISIBLE);
         passwordEditText.setVisibility(View.VISIBLE);
         emailButton.setVisibility(View.VISIBLE);
-        userDisplayName.setVisibility(View.VISIBLE);
         backButton.setVisibility(View.VISIBLE);
+        title.setVisibility(View.GONE);
         signInButton.setVisibility(View.GONE);
         signUpButton.setVisibility(View.GONE);
         anonymousButton.setVisibility(View.GONE);
+        emailEditText.setText(EMPTY_STRING);
+        passwordEditText.setText(EMPTY_STRING);
     }
 }
