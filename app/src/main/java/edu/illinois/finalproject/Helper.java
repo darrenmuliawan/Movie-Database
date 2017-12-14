@@ -1,5 +1,6 @@
 package edu.illinois.finalproject;
 
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -40,6 +41,26 @@ public class Helper {
     private static String name = null;
     private static String time = null;
     private static Comment commentObj = new Comment(null, null, null);
+
+
+    /**
+     * Change the color of buttons
+     * @param nowPlaying Now Playing Button
+     * @param upcoming Upcoming Button
+     * @param popular Popular Button
+     * @param topRated Top Rated Button
+     */
+    public static void updateButtonColor(Button nowPlaying, Button upcoming, Button popular,
+                                  Button topRated) {
+        nowPlaying.setBackgroundColor(Color.GRAY);
+        nowPlaying.setTextColor(Color.BLACK);
+        upcoming.setBackgroundColor(Color.GRAY);
+        upcoming.setTextColor(Color.BLACK);
+        popular.setBackgroundColor(Color.GRAY);
+        popular.setTextColor(Color.BLACK);
+        topRated.setBackgroundColor(Color.GRAY);
+        topRated.setTextColor(Color.BLACK);
+    }
 
     /**
      * This function is to load more movies to the list and show it on the RecyclerView.

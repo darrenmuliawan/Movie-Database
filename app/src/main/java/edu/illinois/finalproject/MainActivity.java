@@ -31,15 +31,20 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> popularMovieList = new ArrayList<>();
     private List<Movie> topRatedMovieList = new ArrayList<>();
     static MainActivity mainActivity;
+    static Button nowPlaying;
+    static Button upcoming;
+    static Button popular;
+    static Button topRated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Button nowPlaying = (Button) findViewById(R.id.nowPlayingButton);
-        final Button upcoming = (Button) findViewById(R.id.upcomingButton);
-        final Button popular = (Button) findViewById(R.id.popularButton);
-        final Button topRated = (Button) findViewById(R.id.topRatedButton);
+
+        nowPlaying = (Button) findViewById(R.id.nowPlayingButton);
+        upcoming = (Button) findViewById(R.id.upcomingButton);
+        popular = (Button) findViewById(R.id.popularButton);
+        topRated = (Button) findViewById(R.id.topRatedButton);
         final Button loadMoreButton = (Button) findViewById(R.id.loadMoreButton);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
 
@@ -53,15 +58,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Helper.populateRecyclerView(recyclerView, NOWPLAYING_URL, nowPlayingMovieList);
-                // Change colors of buttons
+                Helper.updateButtonColor(nowPlaying, upcoming, popular, topRated);
                 nowPlaying.setBackgroundColor(Color.DKGRAY);
                 nowPlaying.setTextColor(Color.WHITE);
-                upcoming.setBackgroundColor(Color.GRAY);
-                upcoming.setTextColor(Color.BLACK);
-                popular.setBackgroundColor(Color.GRAY);
-                popular.setTextColor(Color.BLACK);
-                topRated.setBackgroundColor(Color.GRAY);
-                topRated.setTextColor(Color.BLACK);
             }
         });
 
@@ -70,15 +69,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Helper.populateRecyclerView(recyclerView, UPCOMING_URL, upcomingMovieList);
-                // Change colors of buttons
+                Helper.updateButtonColor(nowPlaying, upcoming, popular, topRated);
                 upcoming.setBackgroundColor(Color.DKGRAY);
                 upcoming.setTextColor(Color.WHITE);
-                nowPlaying.setBackgroundColor(Color.GRAY);
-                nowPlaying.setTextColor(Color.BLACK);
-                popular.setBackgroundColor(Color.GRAY);
-                popular.setTextColor(Color.BLACK);
-                topRated.setBackgroundColor(Color.GRAY);
-                topRated.setTextColor(Color.BLACK);
             }
         });
 
@@ -87,15 +80,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Helper.populateRecyclerView(recyclerView, POPULAR_URL, popularMovieList);
-                // Change colors of buttons
+                Helper.updateButtonColor(nowPlaying, upcoming, popular, topRated);
                 popular.setBackgroundColor(Color.DKGRAY);
                 popular.setTextColor(Color.WHITE);
-                upcoming.setBackgroundColor(Color.GRAY);
-                upcoming.setTextColor(Color.BLACK);
-                nowPlaying.setBackgroundColor(Color.GRAY);
-                nowPlaying.setTextColor(Color.BLACK);
-                topRated.setBackgroundColor(Color.GRAY);
-                topRated.setTextColor(Color.BLACK);
             }
         });
 
@@ -104,15 +91,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Helper.populateRecyclerView(recyclerView, TOPRATED_URL, topRatedMovieList);
-                // Change colors of buttons
+                Helper.updateButtonColor(nowPlaying, upcoming, popular, topRated);
                 topRated.setBackgroundColor(Color.DKGRAY);
                 topRated.setTextColor(Color.WHITE);
-                upcoming.setBackgroundColor(Color.GRAY);
-                upcoming.setTextColor(Color.BLACK);
-                popular.setBackgroundColor(Color.GRAY);
-                popular.setTextColor(Color.BLACK);
-                nowPlaying.setBackgroundColor(Color.GRAY);
-                nowPlaying.setTextColor(Color.BLACK);
             }
         });
 
